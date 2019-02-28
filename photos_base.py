@@ -6,6 +6,7 @@ class Photo:
         self.id = id
         self.orientation = orientation
         self.tags = tags
+        self.hasBeenUsed = False
 
     def get_orientation(self):
         return self.orientation
@@ -19,6 +20,8 @@ class Photo:
     def get_id(self):
         return self.id
 
+    def set_has_been_used(self):
+        self.hasBeenUsed = True
 
 class Slide:
     def __init__(self, photos):
