@@ -51,13 +51,35 @@ class Slide:
         return '{}'.format(self.photos[0].get_id()) if self.get_type() == 'H' else '{} {}'.format(
             self.photos[0].get_id(), self.photos[1].get_id())
 
-
-def random_algo(file):
+def parseFile(file):
     lines = get_non_empty_lines(file)
     photos = []
     for i, line in enumerate(lines[1:]):
         infos = line.split(' ')
         photos.append(Photo(i, infos[0], infos[2:]))
+    return photos
+
+def getNumberLabel(photos):
+    dico = {}
+    for i in range(0, len(photos)):
+        for tags in photos[i].get_tags():
+            if tags in dico:
+                dico[tags] += 1
+            else:
+                dico[tags] = 1
+    print(dico)
+
+
+# def algo_nul(photos):
+#     for photo in photos:
+
+def random_algo(file):
+    # lines = get_non_empty_lines(file)
+    photos = []
+    photos = parseFile(file)
+    # for i, line in enumerate(lines[1:]):
+    #     infos = line.split(' ')
+    #     photos.append(Photo(i, infos[0], infos[2:]))
 
     slides = []
     i = 0
@@ -77,3 +99,9 @@ def random_algo(file):
     print(len(slides))
     for i in range(0, len(slides)):
         print(slides[i])
+
+
+
+photos = []
+photos = parseFile('assignment/b_lovely_landscapes.txt')
+getNumberLabel(photos)
