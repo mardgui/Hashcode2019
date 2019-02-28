@@ -119,8 +119,3 @@ def compare_two_slides(slide1, slide2):
                 different += 1
 
     return different, commun
-
-
-random_algo("assignment/c_memorable_moments.txt")
-
-print('')
