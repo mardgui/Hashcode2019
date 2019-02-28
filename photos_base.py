@@ -41,4 +41,20 @@ for i, line in enumerate(lines[1:]):
     infos = line.split(' ')
     photos.append(Photo(i, infos[0], infos[2:]))
 
+slides = []
+for i, x in len(photos):
+    temp = []
+    if (photos[i]).get_orientation() == "V":
+        for j in range (i+1, len(photos)):
+            if (photos[j]).get_orientation() == "V":
+                slides.append(Slide[photos[i],photos[j]])
+                i = j+1
+                break
+
+print(len(slides))
+for i, in len(slides):
+    print(slides[i])
+
+
+
 print('')
