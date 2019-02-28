@@ -77,3 +77,24 @@ def random_algo(file):
     print(len(slides))
     for i in range(0, len(slides)):
         print(slides[i])
+
+
+def compare_two_photos(photo1, photo2):
+    different = 0
+    commun = 0
+    tags_photo_1 = photo1.get_tags()
+    tags_photo_2 = photo2.get_tags()
+
+    for tag1 in tags_photo_1:
+        for tag2 in tags_photo_2:
+            if tag1 == tag2:
+                commun += 1
+            else:
+                different += 1
+
+    return different, commun
+
+
+random_algo("assignment/c_memorable_moments.txt")
+
+print('')
