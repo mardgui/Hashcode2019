@@ -1,3 +1,5 @@
+import sys
+
 import photos_base
 
 if __name__ == "__main__":
@@ -6,4 +8,5 @@ if __name__ == "__main__":
         files[i] = 'assignment/' + file + '.txt'
 
     for file in files:
+        sys.stdout = open('out_{}'.format(file[11:]), 'w')
         photos_base.random_algo(file)
