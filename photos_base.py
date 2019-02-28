@@ -41,6 +41,16 @@ class Slide:
         else:
             raise ValueError("The slide is wrong!")
 
+    def get_tags(self):
+        tags = []
+        photos = self.photos
+        if len(photos) == 1:
+            tags.append(photos[0].get_tags())
+        if len(photos) == 2:
+            tags.append(photos[0].get_tags())
+            tags.append(photos[1].get_tags())
+        return tags
+
     def get_photos(self):
         return self.photos
 
@@ -87,6 +97,22 @@ def compare_two_photos(photo1, photo2):
 
     for tag1 in tags_photo_1:
         for tag2 in tags_photo_2:
+            if tag1 == tag2:
+                commun += 1
+            else:
+                different += 1
+
+    return different, commun
+
+
+def compare_two_slides(slide1, slide2):
+    different = 0
+    commun = 0
+    tags_slide_1 = slide1.get_tags()
+    tags_slide_2 = slide2.get_tags()
+
+    for tag1 in tags_slide_1:
+        for tag2 in tags_slide_2:
             if tag1 == tag2:
                 commun += 1
             else:
