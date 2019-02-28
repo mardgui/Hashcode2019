@@ -1,3 +1,5 @@
+import random
+
 def get_non_empty_lines(filename):
     try:
         lines = [line.strip() for line in open(filename, "r")]
@@ -36,6 +38,27 @@ class Photo:
     def set_has_not_been_used(self):
         self.hasBeenUsed = False
 
+class Photo_v2(Photo):
+    def __init__(self, id, orientation, tags):
+        self.id = id
+        self.orientation = orientation
+        self.tags = set(tags)
+        self.hasBeenUsed = False
+
+    def get_orientation(self):
+        return self.orientation
+
+    def get_tags(self):
+        return self.tags
+
+    def get_nb_tags(self):
+        return len(self.tags)
+
+    def get_id(self):
+        return self.id
+
+    def set_has_been_used(self):
+        self.hasBeenUsed = True
 
 class Slide:
     def __init__(self, photos):
@@ -92,6 +115,49 @@ class Slide:
     def has_been_used(self):
         return self.has_been_used == True
 
+def make_pairs(vertical_photos):
+    available_pairs = [list() for i in range(int(len(vertical_photos)/2))]
+    finished_pairs = []
+    unused_photos = list(vertical_photos)
+    for photo in vertical_photos:
+        for pair in available_pairs:
+            if len(pair) == 0 or len(pair[0].get_tags() & photo.get_tags()) == 0:
+                pair.append(photo)
+                if len(pair) == 2:
+                    finished_pairs.append(Slide(pair))
+                unused_photos.remove(photo)
+                break
+
+        try:
+            if len(finished_pairs) > 0:
+                available_pairs.remove(finished_pairs[-1].photos)
+        except ValueError:
+            print('', end='')
+    for i, photo in enumerate(unused_photos):
+        pair = available_pairs[random.randrange(len(unused_photos) - i)]
+        pair.append(photo)
+        finished_pairs.append(Slide(pair))
+        available_pairs.remove(pair)
+
+    return finished_pairs
+
+def algo_eclate_au_sol(file):
+    photos = parseFile_v2(file)
+    v_photos = []
+    for photo in photos:
+        if photo.get_orientation() == 'V':
+            v_photos.append(photo)
+    make_pairs(v_photos)
+
+def parseFile_v2(file):
+    lines = get_non_empty_lines(file)
+    photos = []
+    for i, line in enumerate(lines[1:]):
+        infos = line.split(' ')
+        photos.append(Photo_v2(i, infos[0], infos[2:]))
+    return photos
+
+
 def parseFile(file):
     lines = get_non_empty_lines(file)
     photos = []
@@ -147,7 +213,7 @@ def smart_algo(photos):
         else:
             horizontal.append(photos[i])
 
-    verticalSlide = mergeVertical(vertical)
+    verticalSlide = make_pairs(vertical)
     for horizontals in horizontal:
         horizontalSlide.append(Slide([horizontals]))
 
