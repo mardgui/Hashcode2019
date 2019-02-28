@@ -121,6 +121,102 @@ def compare_two_slides(slide1, slide2):
     return different, commun
 
 
+def max_common_tags_slides(slide1, other_slides):
+    slideMax = -1
+    max = 0
+
+    for slide in other_slides:
+        if compare_two_slides(slide1, slide)[1] > max:
+            slideMax = slide
+            max = len(slideMax.get_tags())
+
+    return slide1, slideMax, max
+
+
+def min_common_tags_slides(slide1, other_slides):
+    slideMin = -1
+    min = 200000
+
+    for slide in other_slides:
+        if compare_two_slides(slide1, slide)[1] < min:
+            slideMin = slide
+            min = len(slideMin.get_tags())
+
+    return slide1, slideMin, min
+
+
+def max_different_tags_slides(slide1, other_slides):
+    slideMax = -1
+    max = 0
+
+    for slide in other_slides:
+        if compare_two_slides(slide1, slide)[0] > max:
+            slideMax = slide
+            max = len(slideMax.get_tags())
+
+    return slide1, slideMax, max
+
+
+def min_different_tags_slides(slide1, other_slides):
+    slideMin = -1
+    min = 200000
+
+    for slide in other_slides:
+        if compare_two_slides(slide1, slide)[0] < min:
+            slideMin = slide
+            min = len(slideMin.get_tags())
+
+    return slide1, slideMin, min
+
+
+def max_common_tags_photos(photo1, other_photos):
+    photoMax = -1
+    max = 0
+
+    for photo in other_photos:
+        if compare_two_photos(photo1, photo)[1] > max:
+            photoMax = photo
+            max = len(photoMax.get_tags())
+
+    return photo1, photoMax, max
+
+
+def min_common_tags_photos(photo1, other_photos):
+    photoMin = -1
+    min = 0
+
+    for photo in other_photos:
+        if compare_two_photos(photo1, photo)[1] < min:
+            photoMin = photo
+            min = len(photoMin.get_tags())
+
+    return photo1, photoMin, min
+
+
+def max_different_tags_photos(photo1, other_photos):
+    photoMax = -1
+    max = 0
+
+    for photo in other_photos:
+        if compare_two_photos(photo1, photo)[0] > max:
+            photoMax = photo
+            max = len(photoMax.get_tags())
+
+    return photo1, photoMax, max
+
+
+def min_different_tags_photos(photo1, other_photos):
+    photoMin = -1
+    min = 0
+
+    for photo in other_photos:
+        if compare_two_photos(photo1, photo)[0] < min:
+            photoMin = photo
+            min = len(photoMin.get_tags())
+
+    return photo1, photoMin, min
+
+
 random_algo("assignment/c_memorable_moments.txt")
 
 print('')
