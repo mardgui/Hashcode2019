@@ -61,6 +61,7 @@ class Slide:
         return '{}'.format(self.photos[0].get_id()) if self.get_type() == 'H' else '{} {}'.format(
             self.photos[0].get_id(), self.photos[1].get_id())
 
+
 def parseFile(file):
     lines = get_non_empty_lines(file)
     photos = []
@@ -68,6 +69,7 @@ def parseFile(file):
         infos = line.split(' ')
         photos.append(Photo(i, infos[0], infos[2:]))
     return photos
+
 
 def getNumberLabel(photos):
     dico = {}
@@ -143,7 +145,6 @@ def compare_two_slides(slide1, slide2):
     return different, commun
 
 
-<<<<<<< .merge_file_a01056
 def max_common_tags_slides(slide1, other_slides):
     slideMax = -1
     max = 0
@@ -243,8 +244,6 @@ def min_different_tags_photos(photo1, other_photos):
 random_algo("assignment/c_memorable_moments.txt")
 
 print('')
-=======
 # FAITES VOS TESTS ICI SI BESOIN
 if __name__ == "__main__":
     print()
->>>>>>> .merge_file_a13212
