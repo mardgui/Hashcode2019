@@ -36,8 +36,8 @@ if __name__ == "__main__":
 
     for file in files:
         sys.stdout = open('out_{}'.format(file[11:]), 'w')
-        photos_base.random_algo(file)
-
+        photos_base.smart_algo(photos_base.parseFile(file))
+        #photos_base.random_algo(file)
     sys.stdout = sys.__stdout__
 
     scores = []

@@ -40,6 +40,7 @@ class Photo:
 class Slide:
     def __init__(self, photos):
         self.photos = []
+        self.has_been_used = False
         if len(photos) == 1 and photos[0].get_orientation() == 'H':
             self.photos = photos
         elif len(photos) == 2 and photos[0].get_orientation() == photos[1].get_orientation() == 'V':
@@ -59,11 +60,21 @@ class Slide:
 
     def set_has_been_used(self):
         photos = self.photos
+        self.has_been_used = True
         if len(photos) == 1:
             photos[0].set_has_been_used()
         if len(photos) == 2:
             photos[0].set_has_been_used()
             photos[1].set_has_been_used()
+
+    def set_has_not_been_used(self):
+        photos = self.photos
+        self.has_been_used = False
+        if len(photos) == 1:
+            photos[0].set_has_not_been_used()
+        if len(photos) == 2:
+            photos[0].set_has_not_been_used()
+            photos[1].set_has_not_been_used()
 
     def get_photos(self):
         return self.photos
@@ -75,7 +86,11 @@ class Slide:
         return '{}'.format(self.photos[0].get_id()) if self.get_type() == 'H' else '{} {}'.format(
             self.photos[0].get_id(), self.photos[1].get_id())
 
+    def has_not_been_used(self):
+        return self.has_been_used == False
 
+    def has_been_used(self):
+        return self.has_been_used == True
 
 def parseFile(file):
     lines = get_non_empty_lines(file)
@@ -94,7 +109,6 @@ def getNumberLabel(photos):
                 dico[tags] += 1
             else:
                 dico[tags] = 1
-    print(dico)
 
 
 # def algo_nul(photos):
@@ -123,29 +137,63 @@ def random_algo(photos):
         print(slides[i])
 
 def smart_algo(photos):
-    horyzontal = []
+    horizontal = []
+    horizontalSlide = []
     vertical = []
+    Slides = []
     for i in range (0, len(photos)):
         if (photos[i]).get_orientation() == "V":
             vertical.append(photos[i])
         else:
-            horyzontal.append(photos[i])
+            horizontal.append(photos[i])
 
-    mergeVertical(vertical)
+    verticalSlide = mergeVertical(vertical)
+    for horizontals in horizontal:
+        horizontalSlide.append(Slide([horizontals]))
+
+    Slides.extend(horizontalSlide)
+    Slides.extend(verticalSlide)
+
+    SlidesReturn = []
+
+    for x in range(15,3):
+        for i in range(0, len(Slides)):
+            actualSlide = Slides[i]
+            if actualSlide.has_not_been_used():
+                for j in range (i+1, len(Slides)):
+                    nextSlide = Slides[j]
+                    if nextSlide.has_not_been_used():
+                        different, common = compare_two_slides(actualSlide, nextSlide)
+                        if different >= x and common >= x:
+                            SlidesReturn.append(actualSlide)
+                            SlidesReturn.append(nextSlide)
+                            actualSlide.set_has_been_used()
+                            nextSlide.set_has_been_used()
+                            break
+
+    for i in range(0, len(Slides)):
+        actualSlide = Slides[i]
+        if actualSlide.has_not_been_used():
+            SlidesReturn.append(actualSlide)
+
+    print(len(SlidesReturn))
+    for i in range(0, len(SlidesReturn)):
+        print(SlidesReturn[i])
 
 
 def mergeVertical(vertical):
     getNumberLabel(vertical)
     verticalMerged = []
-    for x in range (0,5):
+    for x in range (0,3):
         for i in range (0,len(vertical)):
             if vertical[i].has_been_used() == False:
-                for j in range(i+1,len(vertical)):
+                for j in range(i+1,min(i+15,len(vertical))):
                     if vertical[j].has_been_used() == False:
                         if compareLabels(vertical[i].get_tags(), vertical[j].get_tags()) == x:
                             vertical[i].set_has_been_used()
                             vertical[j].set_has_been_used()
                             verticalMerged.append(Slide([vertical[i], vertical[j]]))
+                            break
 
     for i in range (0,len(vertical)):
         if vertical[i].has_been_used() == False:
@@ -154,10 +202,10 @@ def mergeVertical(vertical):
                     vertical[i].set_has_been_used()
                     vertical[j].set_has_been_used()
                     verticalMerged.append(Slide([vertical[i], vertical[j]]))
+                    break
 
     for slide in verticalMerged:
         slide.set_has_not_been_used()
-    print(verticalMerged)
     return verticalMerged
 
 def compareLabels(labList1, labList2):
@@ -294,11 +342,9 @@ def min_different_tags_photos(photo1, other_photos):
     return photo1, photoMin, min
 
 
-random_algo("assignment/c_memorable_moments.txt")
 
-print('')
 # FAITES VOS TESTS ICI SI BESOIN
 if __name__ == "__main__":
     print()
-    smart_algo(parseFile("assignment/c_memorable_moments.txt"))
+    print(smart_algo(parseFile("assignment/e_shiny_selfies.txt")))
 
