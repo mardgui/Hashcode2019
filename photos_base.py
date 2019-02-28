@@ -1,4 +1,11 @@
-import main
+def get_non_empty_lines(filename):
+    try:
+        lines = [line.strip() for line in open(filename, "r")]
+        lines = [line for line in lines if line]  # Skipping blank lines
+        return lines
+    except IOError as e:
+        print("Unable to read output file!\n" + e)
+        return []
 
 
 class Photo:
@@ -23,6 +30,7 @@ class Photo:
     def set_has_been_used(self):
         self.hasBeenUsed = True
 
+
 class Slide:
     def __init__(self, photos):
         self.photos = []
@@ -40,15 +48,15 @@ class Slide:
         return self.photos[0].get_orientation()
 
     def __str__(self):
-        return '{}'.format(self.photos[0].get_id()) if self.get_type() == 'H' else '{} {}'.format(self.photos[0].get_id(), self.photos[1].get_id())
+        return '{}'.format(self.photos[0].get_id()) if self.get_type() == 'H' else '{} {}'.format(
+            self.photos[0].get_id(), self.photos[1].get_id())
 
 
 # def algo_nul(photos):
-#     last_not_full = 0
 #     for photo in photos:
 
 
-lines = main.get_non_empty_lines("assignment/a_example.txt")
+lines = get_non_empty_lines("assignment/a_example.txt")
 photos = []
 nb_photos = int(lines[0])
 for i, line in enumerate(lines[1:]):
