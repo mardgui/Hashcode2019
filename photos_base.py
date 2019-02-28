@@ -119,3 +119,8 @@ def compare_two_slides(slide1, slide2):
                 different += 1
 
     return different, commun
+
+
+# FAITES VOS TESTS ICI SI BESOIN
+if __name__ == "__main__":
+    print()
