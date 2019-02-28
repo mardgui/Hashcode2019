@@ -105,3 +105,8 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+out_a_example.txt
+out_b_lovely_landscapes.txt
+out_c_memorable_moments.txt
+out_d_pet_pictures.txt
+out_e_shiny_selfies.txt

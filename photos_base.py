@@ -52,13 +52,9 @@ class Slide:
             self.photos[0].get_id(), self.photos[1].get_id())
 
 
-# def algo_nul(photos):
-#     for photo in photos:
-
 def random_algo(file):
     lines = get_non_empty_lines(file)
     photos = []
-    nb_photos = int(lines[0])
     for i, line in enumerate(lines[1:]):
         infos = line.split(' ')
         photos.append(Photo(i, infos[0], infos[2:]))
@@ -81,8 +77,3 @@ def random_algo(file):
     print(len(slides))
     for i in range(0, len(slides)):
         print(slides[i])
-
-
-random_algo("assignment/c_memorable_moments.txt")
-
-print('')
