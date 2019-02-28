@@ -81,8 +81,3 @@ def random_algo(file):
     print(len(slides))
     for i in range(0, len(slides)):
         print(slides[i])
-
-
-random_algo("assignment/c_memorable_moments.txt")
-
-print('')
