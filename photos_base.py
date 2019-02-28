@@ -55,7 +55,7 @@ class Slide:
 # def algo_nul(photos):
 #     for photo in photos:
 
-def randomAlgo(file):
+def random_algo(file):
     lines = get_non_empty_lines(file)
     photos = []
     nb_photos = int(lines[0])
@@ -67,23 +67,19 @@ def randomAlgo(file):
     i = 0
     while i < len(photos):
         if (photos[i]).get_orientation() == "V":
-            for j in range (i+1, len(photos)):
+            for j in range(i + 1, len(photos)):
                 if (photos[j]).get_orientation() == "V":
-                    slides.append(Slide([photos[i],photos[j]]))
-                    i = j+1
+                    slides.append(Slide([photos[i], photos[j]]))
+                    i = j + 1
                     break
         else:
-            i = i+1
-
+            i = i + 1
 
     print(len(slides))
-    for i in range (0,len(slides)):
+    for i in range(0, len(slides)):
         print(slides[i])
 
 
-
-
-randomAlgo("assignment/c_memorable_moments.txt")
-
+random_algo("assignment/c_memorable_moments.txt")
 
 print('')
