@@ -4,6 +4,8 @@ import photos_base
 
 
 def score(file_in, file_out):
+    file_in = open(file_in, 'r')
+    file_out = open(file_out, 'r')
 
     photosDesc = {}
     cpt = 0
@@ -11,7 +13,7 @@ def score(file_in, file_out):
         line = i.replace("\n", "").split(" ")
         photosDesc[cpt] = line[2:]
         cpt += 1
-    print(photosDesc)
+    # print(photosDesc)
 
     cpt = 0
     prevTags = []
@@ -65,4 +67,4 @@ if __name__ == "__main__":
     sys.stdout = sys.__stdout__
 
     for file in files:
-        print(score(file, 'out_{}'.format(file[11:])))
+        print('Score on file {}: {}'.format(file[11:], score(file, 'out_{}'.format(file[11:]))))
