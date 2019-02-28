@@ -4,55 +4,29 @@ import photos_base
 
 
 def score(file_in, file_out):
-    file_in = open(file_in, 'r')
-    file_out = open(file_out, 'r')
+    lines_in = [line.strip() for line in open(file_in, "r")]
+    lines_out = [line.strip() for line in open(file_out, "r")]
 
-    photosDesc = {}
-    cpt = 0
-    for i in file_in:
-        line = i.replace("\n", "").split(" ")
-        photosDesc[cpt] = line[2:]
-        cpt += 1
-    # print(photosDesc)
+    photo_tags = [line.split(' ')[2:] for line in lines_in[1:]]
 
-    cpt = 0
-    prevTags = []
-    tags = []
-    totalScore = 0
+    def interest_factor(slide_1, slide_2):
+        tags_1 = set()
+        tags_2 = set()
+        for photo in slide_1.split(' '):
+            for tag in photo_tags[int(photo)]:
+                tags_1.add(tag)
+        for photo in slide_2.split(' '):
+            for tag in photo_tags[int(photo)]:
+                tags_2.add(tag)
 
-    for i in file_out:
-        prevTags = tags
-        tags = []
-        common = 0
-        different1 = 0
-        different2 = 0
+        return min(len(tags_1 - tags_2), len(tags_2 - tags_1), len(tags_1 & tags_2))
 
-        line = i.replace("\n", "").split(" ")
-        tags.append(photosDesc[int(line[0])])
-        if len(line) > 1:
-            tags.append(photosDesc[int(line[1])])
+    total_score = 0
 
-        if cpt == 0:
-            cpt += 1
-            continue
+    for i in range(1, len(lines_out) - 1):
+        total_score += interest_factor(lines_out[i], lines_out[i + 1])
 
-        for x in tags:
-            for y in x:
-                for z in prevTags:
-                    if y in z:
-                        common += 1
-                    else:
-                        different1 += 1
-
-        for x in prevTags:
-            for y in x:
-                for z in tags:
-                    if y not in z:
-                        different2 += 1
-
-        totalScore += min(common, different1, different2)
-
-    return totalScore
+    return total_score
 
 
 if __name__ == "__main__":
@@ -66,5 +40,9 @@ if __name__ == "__main__":
 
     sys.stdout = sys.__stdout__
 
+    scores = []
     for file in files:
-        print('Score on file {}: {}'.format(file[11:], score(file, 'out_{}'.format(file[11:]))))
+        scores.append( score(file, 'out_{}'.format(file[11:])))
+        print('Score on file {}: {}'.format(file[11:], scores[-1]))
+
+    print('Total score: {}'.format(sum(scores)))

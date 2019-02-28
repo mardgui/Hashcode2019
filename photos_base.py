@@ -57,6 +57,14 @@ class Slide:
             tags.append(photos[1].get_tags())
         return tags
 
+    def set_has_been_used(self):
+        photos = self.photos
+        if len(photos) == 1:
+            photos[0].set_has_been_used()
+        if len(photos) == 2:
+            photos[0].set_has_been_used()
+            photos[1].set_has_been_used()
+
     def get_photos(self):
         return self.photos
 
@@ -67,6 +75,8 @@ class Slide:
         return '{}'.format(self.photos[0].get_id()) if self.get_type() == 'H' else '{} {}'.format(
             self.photos[0].get_id(), self.photos[1].get_id())
 
+
+
 def parseFile(file):
     lines = get_non_empty_lines(file)
     photos = []
@@ -74,6 +84,7 @@ def parseFile(file):
         infos = line.split(' ')
         photos.append(Photo(i, infos[0], infos[2:]))
     return photos
+
 
 def getNumberLabel(photos):
     dico = {}
@@ -187,6 +198,105 @@ def compare_two_slides(slide1, slide2):
     return different, commun
 
 
+def max_common_tags_slides(slide1, other_slides):
+    slideMax = -1
+    max = 0
+
+    for slide in other_slides:
+        if compare_two_slides(slide1, slide)[1] > max:
+            slideMax = slide
+            max = len(slideMax.get_tags())
+
+    return slide1, slideMax, max
+
+
+def min_common_tags_slides(slide1, other_slides):
+    slideMin = -1
+    min = 200000
+
+    for slide in other_slides:
+        if compare_two_slides(slide1, slide)[1] < min:
+            slideMin = slide
+            min = len(slideMin.get_tags())
+
+    return slide1, slideMin, min
+
+
+def max_different_tags_slides(slide1, other_slides):
+    slideMax = -1
+    max = 0
+
+    for slide in other_slides:
+        if compare_two_slides(slide1, slide)[0] > max:
+            slideMax = slide
+            max = len(slideMax.get_tags())
+
+    return slide1, slideMax, max
+
+
+def min_different_tags_slides(slide1, other_slides):
+    slideMin = -1
+    min = 200000
+
+    for slide in other_slides:
+        if compare_two_slides(slide1, slide)[0] < min:
+            slideMin = slide
+            min = len(slideMin.get_tags())
+
+    return slide1, slideMin, min
+
+
+def max_common_tags_photos(photo1, other_photos):
+    photoMax = -1
+    max = 0
+
+    for photo in other_photos:
+        if compare_two_photos(photo1, photo)[1] > max:
+            photoMax = photo
+            max = len(photoMax.get_tags())
+
+    return photo1, photoMax, max
+
+
+def min_common_tags_photos(photo1, other_photos):
+    photoMin = -1
+    min = 0
+
+    for photo in other_photos:
+        if compare_two_photos(photo1, photo)[1] < min:
+            photoMin = photo
+            min = len(photoMin.get_tags())
+
+    return photo1, photoMin, min
+
+
+def max_different_tags_photos(photo1, other_photos):
+    photoMax = -1
+    max = 0
+
+    for photo in other_photos:
+        if compare_two_photos(photo1, photo)[0] > max:
+            photoMax = photo
+            max = len(photoMax.get_tags())
+
+    return photo1, photoMax, max
+
+
+def min_different_tags_photos(photo1, other_photos):
+    photoMin = -1
+    min = 0
+
+    for photo in other_photos:
+        if compare_two_photos(photo1, photo)[0] < min:
+            photoMin = photo
+            min = len(photoMin.get_tags())
+
+    return photo1, photoMin, min
+
+
+random_algo("assignment/c_memorable_moments.txt")
+
+print('')
 # FAITES VOS TESTS ICI SI BESOIN
 if __name__ == "__main__":
     print()
