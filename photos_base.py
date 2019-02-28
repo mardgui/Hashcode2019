@@ -72,7 +72,10 @@ def random_algo(file):
                     slides.append(Slide([photos[i], photos[j]]))
                     i = j + 1
                     break
+                else:
+                    slides.append(Slide([photos[j]]))
         else:
+            slides.append(Slide([photos[i]]))
             i = i + 1
 
     print(len(slides))
