@@ -51,6 +51,14 @@ class Slide:
             tags.append(photos[1].get_tags())
         return tags
 
+    def set_has_been_used(self):
+        photos = self.photos
+        if len(photos) == 1:
+            photos[0].set_has_been_used()
+        if len(photos) == 2:
+            photos[0].set_has_been_used()
+            photos[1].set_has_been_used()
+
     def get_photos(self):
         return self.photos
 
@@ -60,6 +68,7 @@ class Slide:
     def __str__(self):
         return '{}'.format(self.photos[0].get_id()) if self.get_type() == 'H' else '{} {}'.format(
             self.photos[0].get_id(), self.photos[1].get_id())
+
 
 
 def parseFile(file):
