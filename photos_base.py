@@ -77,7 +77,6 @@ def random_algo(file):
     print(len(slides))
     for i in range(0, len(slides)):
         print(slides[i])
-<<<<<<< HEAD
 
 
 def compare_two_photos(photo1, photo2):
@@ -99,5 +98,3 @@ def compare_two_photos(photo1, photo2):
 random_algo("assignment/c_memorable_moments.txt")
 
 print('')
-=======
->>>>>>> ff2b347f70eb2abe6550654f233bf6acc99991ee
