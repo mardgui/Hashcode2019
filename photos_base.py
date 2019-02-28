@@ -17,6 +17,23 @@ class Photo:
         return len(self.tags)
 
 
+class Slide:
+    def __init__(self, photos):
+        self.photos = []
+        if len(photos) == 1 and photos[0].get_orientation() == 'H':
+            self.photos = photos
+        elif len(photos) == 2 and photos[0].get_orientation() == photos[1].get_orientation() == 'V':
+            self.photos = photos
+        else:
+            raise ValueError("The slide is wrong!")
+
+    def get_photos(self):
+        return self.photos
+
+    def get_type(self):
+        return self.photos[0].get_orientation()
+
+
 lines = main.get_non_empty_lines("assignment/a_example.txt")
 photos = []
 nb_photos = int(lines[0])
