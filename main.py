@@ -1,12 +1,13 @@
-import time, sys, random
+import random
+import sys
+import time
 
 
 def get_non_empty_lines(filename):
     try:
         lines = [line.strip() for line in open(filename, "r")]
         lines = [line for line in lines if line]  # Skipping blank lines
-        l = len(lines)
-        return l, lines
+        return lines
     except IOError as e:
         print("Unable to read output file!\n" + e)
         return []
@@ -14,8 +15,8 @@ def get_non_empty_lines(filename):
 
 def do_stuff():
     t1 = time.time()
-    length, lines = get_non_empty_lines(sys.argv[1])
-    r = random.randrange(length)
+    lines = get_non_empty_lines(sys.argv[1])
+    r = random.randrange(len(lines))
     print(lines[r])
     print(time.time() - t1)
 
