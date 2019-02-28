@@ -16,6 +16,9 @@ class Photo:
     def get_nb_tags(self):
         return len(self.tags)
 
+    def get_id(self):
+        return self.id
+
 
 class Slide:
     def __init__(self, photos):
@@ -33,6 +36,14 @@ class Slide:
     def get_type(self):
         return self.photos[0].get_orientation()
 
+    def __str__(self):
+        return '{}'.format(self.photos[0].get_id()) if self.get_type() == 'H' else '{} {}'.format(self.photos[0].get_id(), self.photos[1].get_id())
+
+
+# def algo_nul(photos):
+#     last_not_full = 0
+#     for photo in photos:
+
 
 lines = main.get_non_empty_lines("assignment/a_example.txt")
 photos = []
@@ -41,4 +52,4 @@ for i, line in enumerate(lines[1:]):
     infos = line.split(' ')
     photos.append(Photo(i, infos[0], infos[2:]))
 
-print('')
+print(Slide([photos[0]]))
