@@ -61,13 +61,35 @@ class Slide:
         return '{}'.format(self.photos[0].get_id()) if self.get_type() == 'H' else '{} {}'.format(
             self.photos[0].get_id(), self.photos[1].get_id())
 
-
-def random_algo(file):
+def parseFile(file):
     lines = get_non_empty_lines(file)
     photos = []
     for i, line in enumerate(lines[1:]):
         infos = line.split(' ')
         photos.append(Photo(i, infos[0], infos[2:]))
+    return photos
+
+def getNumberLabel(photos):
+    dico = {}
+    for i in range(0, len(photos)):
+        for tags in photos[i].get_tags():
+            if tags in dico:
+                dico[tags] += 1
+            else:
+                dico[tags] = 1
+    print(dico)
+
+
+# def algo_nul(photos):
+#     for photo in photos:
+
+def random_algo(file):
+    # lines = get_non_empty_lines(file)
+    photos = []
+    photos = parseFile(file)
+    # for i, line in enumerate(lines[1:]):
+    #     infos = line.split(' ')
+    #     photos.append(Photo(i, infos[0], infos[2:]))
 
     slides = []
     i = 0
@@ -121,6 +143,7 @@ def compare_two_slides(slide1, slide2):
     return different, commun
 
 
+<<<<<<< .merge_file_a01056
 def max_common_tags_slides(slide1, other_slides):
     slideMax = -1
     max = 0
@@ -220,3 +243,8 @@ def min_different_tags_photos(photo1, other_photos):
 random_algo("assignment/c_memorable_moments.txt")
 
 print('')
+=======
+# FAITES VOS TESTS ICI SI BESOIN
+if __name__ == "__main__":
+    print()
+>>>>>>> .merge_file_a13212
