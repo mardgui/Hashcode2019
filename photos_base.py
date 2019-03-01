@@ -1,6 +1,3 @@
-import random
-
-
 def get_non_empty_lines(filename):
     try:
         lines = [line.strip() for line in open(filename, "r")]
@@ -9,6 +6,15 @@ def get_non_empty_lines(filename):
     except IOError as e:
         print("Unable to read output file!\n" + e)
         return []
+
+
+def permutations(n):
+    """
+    This method takes an integer n as input, and return all permutation of ( 1, 2, .., n ).
+    For example, permutations(3) will return [(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)]
+    """
+    if n <= 0: return [()]
+    return [(i,) + tuple(c + int(i <= c) for c in w) for i in range(1, n + 1) for w in permutations(n - 1)]
 
 
 class Photo:
@@ -70,11 +76,22 @@ def make_pairs(vertical_photos):
 
         if finished:
             available_pairs.remove(finished_pairs[-1].photos)
-    for i, photo in enumerate(unused_photos):
-        pair = available_pairs[random.randrange(len(unused_photos) - i)]
-        pair.append(photo)
+
+    if len(unused_photos) == 0:
+        return finished_pairs
+
+    best_permutation = (tuple([i for i in range(len(unused_photos))]), 0)
+    for permutation in permutations(len(unused_photos)):
+        score = 0
+        for i, photo in enumerate(permutation):
+            score += len(unused_photos[photo - 1].get_tags() | available_pairs[i][0].get_tags())
+        if score > best_permutation[1]:
+            best_permutation = (permutation, score)
+
+    for i, photo in enumerate(best_permutation[0]):
+        pair = available_pairs[i]
+        pair.append(unused_photos[photo - 1])
         finished_pairs.append(Slide(pair))
-        available_pairs.remove(pair)
 
     return finished_pairs
 
@@ -116,7 +133,7 @@ def algo_eclate_au_sol(file):
         best_slide = slides[0]
         index = 0
         max_score = interest_factor(new_slides[-1], best_slide, 0)
-        for j, slide in enumerate(slides[1:len(slides)]):
+        for j, slide in enumerate(slides[1:min(64, len(slides))]):
             score = interest_factor(new_slides[-1], slide, max_score)
             if score > max_score:
                 best_slide = slide
