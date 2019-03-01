@@ -1,6 +1,3 @@
-from math import sqrt
-
-
 def get_non_empty_lines(filename):
     try:
         lines = [line.strip() for line in open(filename, "r")]
@@ -99,7 +96,7 @@ def make_pairs(vertical_photos):
     return finished_pairs
 
 
-def algo_eclate_au_sol(file, max_exp):
+def algo_eclate_au_sol(file, max_exp=0):
     def interest_factor(slide_1, slide_2, bound):
         tags_1 = slide_1.get_tags()
         if len(tags_1) < bound + 2:
@@ -121,12 +118,13 @@ def algo_eclate_au_sol(file, max_exp):
     def simple_exploration():
         new_slides = [slides[0]]
         del slides[0]
+        max_index = len(slides) if max_exp == 0 else min(max_exp, len(slides))
 
         for i in range(len(slides)):
             best_slide = slides[0]
             index = 0
             max_score = interest_factor(new_slides[-1], best_slide, 0)
-            for j, slide in enumerate(slides[1:min(max_exp, len(slides))]):
+            for j, slide in enumerate(slides[1:max_index]):
                 score = interest_factor(new_slides[-1], slide, max_score)
                 if score > max_score:
                     best_slide = slide
