@@ -39,7 +39,8 @@ if __name__ == "__main__":
 
     for file in files:
         sys.stdout = open('out_{}'.format(file[11:]), 'w')
-        photos_base.algo_eclate_au_sol(file)
+        photos_base.algo_eclate_au_sol(file, 500)
+
     sys.stdout = sys.__stdout__
 
     scores = []

@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 def get_non_empty_lines(filename):
     try:
         lines = [line.strip() for line in open(filename, "r")]
@@ -96,20 +99,43 @@ def make_pairs(vertical_photos):
     return finished_pairs
 
 
-def algo_eclate_au_sol(file):
+def algo_eclate_au_sol(file, max_exp):
     def interest_factor(slide_1, slide_2, bound):
         tags_1 = slide_1.get_tags()
+        if len(tags_1) < bound + 2:
+            return 0
         tags_2 = slide_2.get_tags()
+        if len(tags_2) < bound + 2:
+            return 0
 
         in_both = len(tags_1 & tags_2)
-        if in_both < bound:
-            return in_both
+        if in_both < bound + 1:
+            return 0
         one_but_not_two = len(tags_1 - tags_2)
-        if one_but_not_two < bound:
-            return one_but_not_two
+        if one_but_not_two < bound + 1:
+            return 0
         two_but_not_one = len(tags_2 - tags_1)
 
         return min(one_but_not_two, two_but_not_one, in_both)
+
+    def simple_exploration():
+        new_slides = [slides[0]]
+        del slides[0]
+
+        for i in range(len(slides)):
+            best_slide = slides[0]
+            index = 0
+            max_score = interest_factor(new_slides[-1], best_slide, 0)
+            for j, slide in enumerate(slides[1:min(max_exp, len(slides))]):
+                score = interest_factor(new_slides[-1], slide, max_score)
+                if score > max_score:
+                    best_slide = slide
+                    index = j + 1
+                    max_score = score
+            new_slides.append(best_slide)
+            del slides[index]
+
+        return new_slides
 
     photos = parse_file(file)
     v_photos = []
@@ -126,21 +152,7 @@ def algo_eclate_au_sol(file):
 
     slides = sorted(slides, reverse=True, key=lambda kv: len(kv.get_tags()))
 
-    new_slides = [slides[0]]
-    del slides[0]
-
-    for i in range(len(slides)):
-        best_slide = slides[0]
-        index = 0
-        max_score = interest_factor(new_slides[-1], best_slide, 0)
-        for j, slide in enumerate(slides[1:min(64, len(slides))]):
-            score = interest_factor(new_slides[-1], slide, max_score)
-            if score > max_score:
-                best_slide = slide
-                index = j + 1
-                max_score = score
-        new_slides.append(best_slide)
-        del slides[index]
+    new_slides = simple_exploration()
 
     print(len(new_slides))
     for i in range(0, len(new_slides)):
