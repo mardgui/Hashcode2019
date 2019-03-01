@@ -1,4 +1,5 @@
 import sys
+import time
 
 import photos_base
 
@@ -30,6 +31,7 @@ def score(file_in, file_out):
 
 
 if __name__ == "__main__":
+    t1 = time.time()
     files = ['a_example', 'b_lovely_landscapes', 'c_memorable_moments', 'd_pet_pictures', 'e_shiny_selfies']
     files.reverse()
     for i, file in enumerate(files):
@@ -46,3 +48,4 @@ if __name__ == "__main__":
         print('Score on file {}: {}'.format(file[11:], scores[-1]))
 
     print('Total score: {}'.format(sum(scores)))
+    print('Elapsed time: {}'.format(time.time() - t1))

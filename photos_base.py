@@ -116,11 +116,11 @@ def algo_eclate_au_sol(file):
         best_slide = slides[0]
         index = 0
         max_score = interest_factor(new_slides[-1], best_slide, 0)
-        for j, slide in enumerate(slides[1:min(200, len(slides))]):
+        for j, slide in enumerate(slides[1:len(slides)]):
             score = interest_factor(new_slides[-1], slide, max_score)
             if score > max_score:
                 best_slide = slide
-                index = j
+                index = j + 1
                 max_score = score
         new_slides.append(best_slide)
         del slides[index]
