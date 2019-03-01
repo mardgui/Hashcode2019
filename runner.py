@@ -31,18 +31,18 @@ def score(file_in, file_out):
 
 if __name__ == "__main__":
     files = ['a_example', 'b_lovely_landscapes', 'c_memorable_moments', 'd_pet_pictures', 'e_shiny_selfies']
+    files.reverse()
     for i, file in enumerate(files):
         files[i] = 'assignment/' + file + '.txt'
 
     for file in files:
         sys.stdout = open('out_{}'.format(file[11:]), 'w')
-        photos_base.smart_algo(photos_base.parseFile_v2(file))
-        #photos_base.random_algo(file)
+        photos_base.algo_eclate_au_sol(file)
     sys.stdout = sys.__stdout__
 
     scores = []
     for file in files:
-        scores.append( score(file, 'out_{}'.format(file[11:])))
+        scores.append(score(file, 'out_{}'.format(file[11:])))
         print('Score on file {}: {}'.format(file[11:], scores[-1]))
 
     print('Total score: {}'.format(sum(scores)))
