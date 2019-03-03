@@ -96,7 +96,7 @@ def make_pairs(vertical_photos):
     return finished_pairs
 
 
-def algo_eclate_au_sol(file, max_exp=0):
+def algo_eclate_au_sol(file, max_exp=0, max_post=0):
     def interest_factor(slide_1, slide_2, bound):
         tags_2 = slide_2.get_tags()
         if len(tags_2) < bound + 2:
@@ -113,27 +113,79 @@ def algo_eclate_au_sol(file, max_exp=0):
         return min(one_but_not_two, two_but_not_one, in_both)
 
     def simple_exploration():
-        new_slides = [slides[0]]
+        res = [slides[0]]
         del slides[0]
         max_index = len(slides) if max_exp == 0 else max_exp
         original_length = len(slides)
 
-        for i in range(len(slides)):
+        for j in range(len(slides)):
             best_slide = slides[0]
             index = 0
-            max_score = interest_factor(new_slides[-1], best_slide, 0)
-            for j, slide in enumerate(slides[1:min(max_index, original_length - i)]):
-                score = interest_factor(new_slides[-1], slide, max_score)
+            max_score = interest_factor(res[-1], best_slide, 0)
+            for k, slide in enumerate(slides[1:min(max_index, original_length - j)]):
+                score = interest_factor(res[-1], slide, max_score)
                 if score == -1:
                     break
                 if score > max_score:
                     best_slide = slide
-                    index = j + 1
+                    index = k + 1
                     max_score = score
-            new_slides.append(best_slide)
+            res.append(best_slide)
+            scores.append(max_score)
             del slides[index]
 
-        return new_slides
+        return res
+
+    # Actually useless, there might be an idea but as of now it worsens the score and takes a lot of time
+    def post_processing():
+        n = len(new_slides) - 1
+        max_index = n if max_post == 0 else min(n, max_post)
+
+        def swap(x, y):
+            tmp = new_slides[x]
+            new_slides[x] = new_slides[y]
+            new_slides[y] = tmp
+
+        slide_0 = new_slides[0]
+        for j, slide in enumerate(new_slides[1:max_index]):
+            initial_score = scores[0] + scores[j] + scores[j + 1]
+            new_score_1 = interest_factor(new_slides[j + 1], new_slides[1], 0)
+            new_score_2 = interest_factor(new_slides[j], slide_0, 0)
+            new_score_3 = interest_factor(slide_0, new_slides[j + 2], initial_score - (new_score_1 + new_score_2))
+            new_score = new_score_1 + new_score_2 + new_score_3
+            if new_score > initial_score:
+                swap(0, j)
+
+        for j, slide_1 in enumerate(new_slides[1:max_index]):
+            slide_j = new_slides[j + 1]
+            for k, slide_2 in enumerate(new_slides[j + 2:-1]):
+                slide_k = new_slides[j + k + 2]
+                initial_score = scores[j] + scores[j + 1] + scores[j + k + 1] + scores[j + k + 2]
+                new_score_1 = interest_factor(new_slides[j], slide_k, 0)
+                new_score_2 = interest_factor(slide_k, new_slides[j + 2], 0)
+                new_score_3 = interest_factor(new_slides[j + k + 1], slide_j, 0)
+                new_score_4 = interest_factor(slide_j, new_slides[j + k + 3],
+                                              initial_score - (new_score_1 + new_score_2 + new_score_3))
+                new_score = new_score_1 + new_score_2 + new_score_3 + new_score_4
+                if new_score > initial_score:
+                    swap(j, k)
+
+        slide_n = new_slides[-1]
+        for j, slide in enumerate(new_slides[1:max_index]):
+            initial_score = scores[j] + scores[j + 1] + scores[n - 1]
+            new_score_1 = interest_factor(new_slides[n - 1], new_slides[j + 1], 0)
+            new_score_2 = interest_factor(new_slides[j], slide_n, 0)
+            new_score_3 = interest_factor(slide_n, new_slides[j + 2], initial_score - (new_score_1 + new_score_2))
+            new_score = new_score_1 + new_score_2 + new_score_3
+            if new_score > initial_score:
+                swap(j, n)
+
+        initial_score = scores[0] + scores[n - 1]
+        new_score_1 = interest_factor(slide_n, new_slides[1], 0)
+        new_score_2 = interest_factor(new_slides[n - 1], slide_0, initial_score - new_score_1)
+        new_score = new_score_1 + new_score_2
+        if new_score > initial_score:
+            swap(0, n)
 
     photos = parse_file(file)
     v_photos = []
@@ -150,7 +202,11 @@ def algo_eclate_au_sol(file, max_exp=0):
 
     slides = sorted(slides, reverse=True, key=lambda kv: len(kv.get_tags()))
 
+    scores = []
+
     new_slides = simple_exploration()
+
+    # post_processing()
 
     print(len(new_slides))
     for i in range(0, len(new_slides)):
