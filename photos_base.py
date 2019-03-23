@@ -136,7 +136,7 @@ def algo_eclate_au_sol(file, max_exp=0, max_post=0):
 
         return res
 
-    # Actually useless, there might be an idea but as of now it worsens the score and takes a lot of time
+    # Very costly post-processing checking for better pairs in local neighborhood
     def post_processing():
         n = len(new_slides) - 1
         max_index = n if max_post == 0 else min(n, max_post)
@@ -154,7 +154,7 @@ def algo_eclate_au_sol(file, max_exp=0, max_post=0):
             new_score_3 = interest_factor(slide_0, new_slides[j + 2], initial_score - (new_score_1 + new_score_2))
             new_score = new_score_1 + new_score_2 + new_score_3
             if new_score > initial_score:
-                swap(0, j)
+                swap(0, j + 1)
 
         for j, slide_1 in enumerate(new_slides[1:max_index]):
             slide_j = new_slides[j + 1]
@@ -168,7 +168,7 @@ def algo_eclate_au_sol(file, max_exp=0, max_post=0):
                                               initial_score - (new_score_1 + new_score_2 + new_score_3))
                 new_score = new_score_1 + new_score_2 + new_score_3 + new_score_4
                 if new_score > initial_score:
-                    swap(j, k)
+                    swap(j + 1, j + k + 2)
 
         slide_n = new_slides[-1]
         for j, slide in enumerate(new_slides[1:max_index]):
@@ -178,7 +178,7 @@ def algo_eclate_au_sol(file, max_exp=0, max_post=0):
             new_score_3 = interest_factor(slide_n, new_slides[j + 2], initial_score - (new_score_1 + new_score_2))
             new_score = new_score_1 + new_score_2 + new_score_3
             if new_score > initial_score:
-                swap(j, n)
+                swap(j + 1, n)
 
         initial_score = scores[0] + scores[n - 1]
         new_score_1 = interest_factor(slide_n, new_slides[1], 0)
@@ -206,7 +206,7 @@ def algo_eclate_au_sol(file, max_exp=0, max_post=0):
 
     new_slides = simple_exploration()
 
-    # post_processing()
+    post_processing()
 
     print(len(new_slides))
     for i in range(0, len(new_slides)):
